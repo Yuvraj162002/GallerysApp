@@ -12,6 +12,7 @@ public class Item {
     public String label;
     public String url;
 
+
     /**
      * Parameterized constructor for item class
      * @param image Image

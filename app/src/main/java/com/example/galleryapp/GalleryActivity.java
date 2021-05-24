@@ -3,9 +3,11 @@ package com.example.galleryapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -359,12 +361,44 @@ public class GalleryActivity extends AppCompatActivity {
 
         if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData()!=null){
                 Uri imageUri = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(imageUri, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+                String uri = imageUri.toString();
+
+                new AddFromGalleryDialog().show(this, uri, new AddFromGalleryDialog.OnCompleteListener() {
+                    @Override
+                    public void onAddCompleted(Item item) {
+                            itemList.add(item);
+                            inflateViewForItem(item);
+                            b.Heading.setVisibility(View.GONE);
+
+                        }
+
+                    @Override
+                    public void onError(String error) {
+                        new MaterialAlertDialogBuilder(GalleryActivity.this)
+                                .setTitle("Error")
+                                .show();
+
+
+                    }
+
+
+                });
+
                 //Do whatever that you desire here. or leave this blank
 
-                ItemCardBinding b = ItemCardBinding.inflate(getLayoutInflater());
-                Glide.with(this)
-                        .load(imageUri)
-                        .into(b.imageview);
+//                ItemCardBinding binding = ItemCardBinding.inflate(getLayoutInflater());
+//                Glide.with(this)
+//                        .load(imageUri)
+//                        .into(binding.imageview);
+//                b.list.addView(binding.getRoot());
+
+
             }
         }
     }
