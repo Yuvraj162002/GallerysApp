@@ -51,6 +51,6 @@ https://github.com/Yuvraj162002/GallerysApp/blob/master/app-debug.apk
 # Video 
  Here is the small video of the Application to show how it is work..
  
- https://github.com/Yuvraj162002/GalleryApp/blob/master/Gallery%20App.mp4
+ https://github.com/Yuvraj162002/GallerysApp/blob/master/Gallery%20app%20(2).mp4
 
 
