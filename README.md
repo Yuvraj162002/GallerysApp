@@ -20,6 +20,10 @@ which fetch Random Images from url
 
 7).Use of Redirect Url..
 
+8).Add Image from gallery
+
+9).Share Image
+
 
 # Preview  Of the Application.
  
@@ -32,6 +36,13 @@ which fetch Random Images from url
 ![g5](https://user-images.githubusercontent.com/77117240/118391420-ce9e0200-b651-11eb-8726-6d28e1ddfd86.jpg)
 ![g6](https://user-images.githubusercontent.com/77117240/118391428-d65da680-b651-11eb-8fe6-f513c92c037b.jpg)
 ![g7](https://user-images.githubusercontent.com/77117240/118391431-dd84b480-b651-11eb-95a3-ed89ab4e7b06.jpg)
+
+<img width="182" alt="pp" src="https://user-images.githubusercontent.com/77117240/119303552-91ee8e00-bc83-11eb-870f-f920cc26e40d.png">
+<img width="191" alt="pp2" src="https://user-images.githubusercontent.com/77117240/119303557-974bd880-bc83-11eb-9128-ed1d8d68f8b7.png">
+<img width="146" alt="pp3" src="https://user-images.githubusercontent.com/77117240/119303570-9c108c80-bc83-11eb-83e2-6e1c330bfd35.png">
+<img width="148" alt="pp4" src="https://user-images.githubusercontent.com/77117240/119303581-a29f0400-bc83-11eb-9dc2-f01f72881357.png">
+<img width="179" alt="pp5" src="https://user-images.githubusercontent.com/77117240/119303602-a894e500-bc83-11eb-923e-df5177625967.png">
+
 
 # Apk
 
