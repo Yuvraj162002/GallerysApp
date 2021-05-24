@@ -46,7 +46,6 @@ which fetch Random Images from url
 
 # Apk
 
-https://github.com/Yuvraj162002/GallerysApp/blob/master/app-debug.apk
 
 # Video 
  Here is the small video of the Application to show how it is work..
