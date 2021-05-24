@@ -64,7 +64,6 @@ public class AddImageDialog implements ItemHelper.OnCompleteListener {
     }
 
 
-     // Edit Image which is come from caches..
 
 
     public void editFetchImage(Context context, Item item, OnCompleteListener listener) {
@@ -77,7 +76,7 @@ public class AddImageDialog implements ItemHelper.OnCompleteListener {
         b.addbutton.setText("Edit");
         b.ProgressSubTitle.setText("Please wait...");
 
-        editImage(url);
+
 
         //Handle cancel event
         handelCancelButton();
@@ -114,13 +113,6 @@ public class AddImageDialog implements ItemHelper.OnCompleteListener {
     }
 
 
-    /// Edit image...
-    private void editImage(String url) {
-        b.InputDimensionRoot.setVisibility(View.GONE);
-        b.ProgressIndiacatorRoot.setVisibility(View.VISIBLE);
-
-        new ItemHelper().editImage(url, context, this);
-    }
 
     ///Handle cancel button..
 
@@ -239,57 +231,7 @@ public class AddImageDialog implements ItemHelper.OnCompleteListener {
         handelAddImageEvent();
     }
 
-//    private void handleShareImageEvent() {
-//     //   b.shareImgBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                try{
-//                    Glide.with(context)
-//                            .asBitmap()
-//                            .load(url)
-//                            .into(new CustomTarget<Bitmap>() {
-//                                @Override
-//                                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-//                                    // Calling the intent to share the bitmap
-//                                    Bitmap icon = resource;
-//                                    Intent share = new Intent(Intent.ACTION_SEND);
-//                                    share.setType("image/jpeg");
-//
-//                                    ContentValues values = new ContentValues();
-//                                    values.put(MediaStore.Images.Media.TITLE, "title");
-//                                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-//                                    Uri uri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//                                            values);
-//
-//
-//                                    OutputStream outputStream;
-//                                    try {
-//                                        outputStream = context.getContentResolver().openOutputStream(uri);
-//                                        icon.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-//                                        outputStream.close();
-//                                    } catch (Exception e) {
-//                                        System.err.println(e.toString());
-//                                    }
-//
-//                                    share.putExtra(Intent.EXTRA_STREAM, uri);
-//                                    context.startActivity(Intent.createChooser(share, "Share Image"));
-//                                }
-//
-//                                @Override
-//                                public void onLoadCleared(@Nullable Drawable placeholder) {
-//
-//                                }
-//                            });
-//
-//                } catch (Exception e) {
-//                    Log.e("Error on sharing", e + " ");
-//                    Toast.makeText(context, "App not Installed", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-//    }
-//
-//
+
 
 
 
@@ -304,7 +246,7 @@ public class AddImageDialog implements ItemHelper.OnCompleteListener {
             //select chip if color present
             if (item != null && item.color == color) {
                 binding.getRoot().setChecked(true);
-                Log.d("Abhi", "inflatePaletteChips: ");
+                Log.d("App", "inflatePaletteChips: ");
             }
         }
     }
@@ -317,13 +259,7 @@ public class AddImageDialog implements ItemHelper.OnCompleteListener {
             binding.getRoot().setText(label);
             this.b.LabelChips.addView(binding.getRoot());
 
-            //Edit Image
-            //Select chip if label present
-            if (item != null && item.label.equals(label)) {
-                Log.d("Abhi", "inflateLabelChips: ");
-                binding.getRoot().setChecked(true);
-                isAlreadyChecked = true;
-            }
+//
         }
     }
 

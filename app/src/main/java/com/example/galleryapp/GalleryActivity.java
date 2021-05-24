@@ -60,145 +60,12 @@ public class GalleryActivity extends AppCompatActivity {
 
         //Load data from sharedPreferences
         loadSharedPreferenceData();
-        //  requestMultiplePermissions();
-        //requestMultiplePermissions();
 
 
     }
 
 
-//  //  private void showPictureDialog(){
-//        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
-//        pictureDialog.setTitle("Select Action");
-//        String[] pictureDialogItems = {
-//                "Select photo from gallery",
-//                "Capture photo from camera" };
-//        pictureDialog.setItems(pictureDialogItems,
-//                new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        switch (which) {
-//                            case 0:
-//                                choosePhotoFromGallary();
-//                                break;
-//                            case 1:
-//                                takePhotoFromCamera();
-//                                break;
-//                        }
-//                    }
-//                });
-//        pictureDialog.show();
-//    }
-//
-//    private void takePhotoFromCamera() {
-//        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//        startActivityForResult(intent, CAMERA);
-//    }
-//
-//    private void choosePhotoFromGallary() {
-//        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-//                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//
-//        startActivityForResult(galleryIntent, GALLERY);
-//
-//    }
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode == this.RESULT_CANCELED) {
-//            return;
-//        }
-//        if (requestCode == GALLERY) {
-//            if (data != null) {
-//                Uri contentURI = data.getData();
-//                try {
-//                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-//                    String path = saveImage(bitmap);
-//                    Toast.makeText(GalleryActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-//                    imageview.setImageBitmap(bitmap);
-//                }
-//               catch (IOException e) {
-//                        e.printStackTrace();
-//                        Toast.makeText(GalleryActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
-//
-//                }
-//                }
-//
-//    } else if (requestCode == CAMERA) {
-//            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-//            imageview.setImageBitmap(thumbnail);
-//            saveImage(thumbnail);
-//            Toast.makeText(GalleryActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-//
-//private String saveImage(Bitmap bitmap) {
-//    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//    myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-//    File wallpaperDirectory = new File(
-//            Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-//    // have the object build the directory structure, if needed.
-//    if (!wallpaperDirectory.exists()) {
-//        wallpaperDirectory.mkdirs();
-//    }
-//
-//    try {
-//        File f = new File(wallpaperDirectory, Calendar.getInstance()
-//                .getTimeInMillis() + ".jpg");
-//        f.createNewFile();
-//        FileOutputStream fo = new FileOutputStream(f);
-//        fo.write(bytes.toByteArray());
-//        MediaScannerConnection.scanFile(this,
-//                new String[]{f.getPath()},
-//                new String[]{"image/jpeg"}, null);
-//        fo.close();
-//        Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
-//
-//        return f.getAbsolutePath();
-//    } catch (IOException e1) {
-//        e1.printStackTrace();
-//    }
-//    return "";
-//}
-//    private void requestMultiplePermissions() {
-//        Glide.with(this)
-//                .withPermissions(
-//                        Manifest.permission.CAMERA,
-//                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-//                        Manifest.permission.READ_EXTERNAL_STORAGE)
-//                .withListener(new MultiplePermissionsListener() {
-//                    @Override
-//                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-//                        // check if all permissions are granted
-//                        if (report.areAllPermissionsGranted()) {
-//                            Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
-//                        }
-//
-//                        // check for permanent denial of any permission
-//                        if (report.isAnyPermissionPermanentlyDenied()) {
-//                            // show alert dialog navigating to Settings
-//                            //openSettingsDialog();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-//                        token.continuePermissionRequest();
-//                    }
-//                }).
-//                withErrorListener(new PermissionRequestErrorListener() {
-//                    @Override
-//                    public void onError(Glide error) {
-//                        Toast.makeText(getApplicationContext(), "Some Error! ", Toast.LENGTH_SHORT).show();
-//                    }
-//                })
-//                .onSameThread()
-//                .check();
-//    }
-//
-//
-//
+
 
     // Load Shared Prefrence...
     private void loadSharedPreferenceData() {
@@ -326,18 +193,6 @@ public class GalleryActivity extends AppCompatActivity {
         noOfImages++;
     }
 
-//  //  private void getDataFromSharedPreferences() {
-//        int itemCount=preferences.getInt(Constants.NO_OF_IMAGES,0);
-//        if(itemCount!=0){
-//            b.itemsList.setVisibility(View.GONE);
-//        }
-//        for (int i=0;i<itemCount;i++){
-//            Item item=new Item(preferences.getString(Constants.IMAGE+i,"")
-//                    ,preferences.getInt(Constants.COLOR+i,0)
-//                    ,preferences.getString(Constants.LABEL+i,""));
-//
-//            items.add(item);
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -374,13 +229,6 @@ public class GalleryActivity extends AppCompatActivity {
 
                 });
 
-                //Do whatever that you desire here. or leave this blank
-
-//                ItemCardBinding binding = ItemCardBinding.inflate(getLayoutInflater());
-//                Glide.with(this)
-//                        .load(imageUri)
-//                        .into(binding.imageview);
-//                b.list.addView(binding.getRoot());
 
 
             }

@@ -104,30 +104,7 @@ public class ItemHelper {
     }
 
 
-    public void editImage(String url, Context context, OnCompleteListener listener) {
-        this.context = context;
-        this.url1 = url1;
-        this.listener = listener;
-        Glide.with(context)
-                .asBitmap()
-                .onlyRetrieveFromCache(true)
-                .load(url)
-                .into(new CustomTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        bitmap = resource;
-                        extraPaletteFromBitmap();
-                    }
 
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                    }
-                });
-    }
-
-
-     // Fetch colors from image by using Palette library
 
     private void extraPaletteFromBitmap() {
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
