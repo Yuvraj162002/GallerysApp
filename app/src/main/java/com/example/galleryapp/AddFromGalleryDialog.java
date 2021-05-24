@@ -178,7 +178,8 @@ public class AddFromGalleryDialog {
 
                 int color=((Chip)deviceBinding.dColorChips.findViewById(colorChipId)).getChipBackgroundColor().getDefaultColor();
 
-                listener.onAddCompleted(new Item(color,label,imageUrl));
+
+                listener.onAddCompleted(new Item(image,color,label,imageUrl));
 
                 dialog.dismiss();
             }

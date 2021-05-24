@@ -33,7 +33,7 @@ import java.util.List;
 public class GalleryActivity extends AppCompatActivity {
     // Create Binding...
     ActivityGalleryBinding b;
-    List<Item> itemList;
+    List<Item> itemList = new ArrayList<>();
     int selectedPosition;
     List<Item> removeItem;
     private boolean isEdited;
@@ -326,33 +326,17 @@ public class GalleryActivity extends AppCompatActivity {
         noOfImages++;
     }
 
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        //Remove Item and save
-        if (removeItem != null) {
-            itemList.removeAll(removeItem);
-
-            Gson gson = new Gson();
-            String json = gson.toJson(itemList);
-
-            getPreferences(MODE_PRIVATE).edit().putString("ITEMS", json).apply();
-
-            finish();
-        }
-
-        //save in SharedPreference
-        if (isEdited || isAdd) {
-            Gson gson = new Gson();
-            String json = gson.toJson(itemList);
-            getPreferences(MODE_PRIVATE).edit().putString("ITEMS", json).apply();
-            isAdd = false;
-            isEdited = false;
-        }
-
-    }
+//  //  private void getDataFromSharedPreferences() {
+//        int itemCount=preferences.getInt(Constants.NO_OF_IMAGES,0);
+//        if(itemCount!=0){
+//            b.itemsList.setVisibility(View.GONE);
+//        }
+//        for (int i=0;i<itemCount;i++){
+//            Item item=new Item(preferences.getString(Constants.IMAGE+i,"")
+//                    ,preferences.getInt(Constants.COLOR+i,0)
+//                    ,preferences.getString(Constants.LABEL+i,""));
+//
+//            items.add(item);
 
 
     @Override
@@ -372,7 +356,7 @@ public class GalleryActivity extends AppCompatActivity {
                 new AddFromGalleryDialog().show(this, uri, new AddFromGalleryDialog.OnCompleteListener() {
                     @Override
                     public void onAddCompleted(Item item) {
-                            itemList.add(item);
+                          itemList.add(item);
                             inflateViewForItem(item);
                             b.Heading.setVisibility(View.GONE);
 
@@ -401,7 +385,34 @@ public class GalleryActivity extends AppCompatActivity {
 
             }
         }
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        //Remove Item and save
+        if (removeItem != null) {
+            itemList.removeAll(removeItem);
+
+            Gson gson = new Gson();
+            String json = gson.toJson(itemList);
+
+            getPreferences(MODE_PRIVATE).edit().putString("ITEMS", json).apply();
+
+            finish();
+        }
+
+        //save in SharedPreference
+        if (isEdited || isAdd) {
+            Gson gson = new Gson();
+            String json = gson.toJson(itemList);
+            getPreferences(MODE_PRIVATE).edit().putString("ITEMS", json).apply();
+            isAdd = false;
+            isEdited = false;
+        }
+
     }
+
+}
 
 
 
