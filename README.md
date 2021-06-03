@@ -42,15 +42,15 @@ which fetch Random Images from url
 <img width="146" alt="pp3" src="https://user-images.githubusercontent.com/77117240/119303570-9c108c80-bc83-11eb-83e2-6e1c330bfd35.png">
 <img width="148" alt="pp4" src="https://user-images.githubusercontent.com/77117240/119303581-a29f0400-bc83-11eb-9dc2-f01f72881357.png">
 <img width="179" alt="pp5" src="https://user-images.githubusercontent.com/77117240/119303602-a894e500-bc83-11eb-923e-df5177625967.png">
+<img width="180" alt="pareek" src="https://user-images.githubusercontent.com/77117240/119359088-dd765b80-bcc6-11eb-9b9d-4da90b3b9ff5.png">
 
 
 # Apk
 
 https://github.com/Yuvraj162002/GallerysApp/blob/master/app-debug.apk
-
 # Video 
  Here is the small video of the Application to show how it is work..
  
- https://github.com/Yuvraj162002/GalleryApp/blob/master/Gallery%20App.mp4
+ https://github.com/Yuvraj162002/GallerysApp/blob/master/Gallery%20app%20(2).mp4
 
 
