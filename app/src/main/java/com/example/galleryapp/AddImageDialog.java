@@ -257,21 +257,6 @@ public class AddImageDialog implements ItemHelper.OnCompleteListener {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public void editFetchImage(Context context, Item item, OnCompleteListener listener) {
         this.url = item.image;
         this.item = item;
@@ -289,7 +274,7 @@ public class AddImageDialog implements ItemHelper.OnCompleteListener {
     }
 
 
-    // Check Dialog Initialize or not...
+
 
 
 

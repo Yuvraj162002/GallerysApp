@@ -1,5 +1,6 @@
 package com.example.galleryapp;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,14 +34,14 @@ import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.FileNotFoundException;
+import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GalleryActivity extends AppCompatActivity {
      private static final int LOAD_IMAGE = 0;
-    private static final int RESULT = 1001;
+    private static final int RESULT = 1;
     // Create Binding...
     ActivityGalleryBinding b;
     List<Item> items = new ArrayList<>();
@@ -64,7 +65,6 @@ public class GalleryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ///ya pe krna h kuch...
         b = ActivityGalleryBinding.inflate((getLayoutInflater()));
         setContentView(b.getRoot());
         preferences = getPreferences(MODE_PRIVATE);
@@ -74,13 +74,13 @@ public class GalleryActivity extends AppCompatActivity {
         if (!items.isEmpty()) {
             showListItems(items);
             } else {
-            b.list.setVisibility(View.VISIBLE);
+            b.Heading.setVisibility(View.VISIBLE);
 
         }
-        enableDisableDrag();
+        enableandDisableDragoption();
     }
 
-    private void enableDisableDrag() {
+    private void enableandDisableDragoption() {
         b.OnOffDrag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,7 +115,7 @@ public class GalleryActivity extends AppCompatActivity {
         });
     }
 
-    void dragDropButtonRestore() {
+    void dragandDropRestore() {
 
             if (mode == 1) {
                 mode = 1;
@@ -143,17 +143,14 @@ public class GalleryActivity extends AppCompatActivity {
             }
         }
 
-        //  enableSwipeToDeleteAndUndo();
 
-
-        //Load data from sharedPreferences
-        //   loadSharedPreferenceData();
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        imageUrl = adapter.imageUrl;    //Image Url of Parent of Context Menu
-        int index = adapter.index;      //Index of item for context menu
-        ItemCardBinding binding = adapter.itemCardBinding;      //Binding of parent of context menu
+        //Image Url of Context Menu
+        imageUrl = adapter.imageUrl;
+        int index = adapter.index;
+        ItemCardBinding binding = adapter.itemCardBinding;
         if (item.getItemId() == R.id.editMenuItem) {
             new EditImageDialog()
                     .show(this, imageUrl, new EditImageDialog.onCompleteListener() {
@@ -174,31 +171,27 @@ public class GalleryActivity extends AppCompatActivity {
                         }
                     });
         }
-        //// problem toh isme................................................
+
         if (item.getItemId() == R.id.shareImage) {
-            try {
-                shareImage(binding);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+
+            shareImage(binding);
+
+            return true;
         }
-        return true;
+        return super.onContextItemSelected(item);
     }
 
-/// Menu Option..
-
+/// Method for search....
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.gallery,menu);
 
-        /// problem toh isme....................................................
         MenuItem item = menu.findItem(R.id.search);
         SearchView searchView = (SearchView)item.getActionView();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                /// ye dehkna h...
                 adapter.filter(query);
                 return true;
             }
@@ -211,7 +204,7 @@ public class GalleryActivity extends AppCompatActivity {
         });
         return true;
     }
-
+////Choose  option from Action menu bar.....
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.addImage) {
@@ -228,7 +221,7 @@ public class GalleryActivity extends AppCompatActivity {
 
         return false;
     }
-
+/// Callback for swap method....
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -239,7 +232,6 @@ public class GalleryActivity extends AppCompatActivity {
         public void onSwiped(@NonNull @NotNull RecyclerView.ViewHolder viewHolder, int direction) {
             items.remove(viewHolder.getAdapterPosition());
             Toast.makeText(context, "Image removed", Toast.LENGTH_SHORT).show();
-            // jada h toh isse bracket ko hta dege...
             if (items.isEmpty()) {
                 b.Heading.setVisibility(View.VISIBLE);
                 adapter.notifyDataSetChanged();
@@ -270,38 +262,39 @@ public class GalleryActivity extends AppCompatActivity {
                     }
                 });
     }
-    private void showListItems(List<Item>items) {
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-        adapter = new ImageAdapter(this, items);
+    /// Method to show list item...
+    private void showListItems(List<Item>item) {
+        adapter = new ImageAdapter(this,items);
+       this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+
         b.list.setLayoutManager(new LinearLayoutManager(this));
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         adapter.setImageAdapter(itemTouchHelper);
         itemTouchHelper.attachToRecyclerView(b.list);
+      //  itemTouchHelper.attachToRecyclerView(b.list);
         callback2 = new ImageTouchHelperCallback(adapter);
+        itemTouchHelper1 = new ItemTouchHelper(callback2);
         adapter.setImageAdapter(itemTouchHelper1);
         b.list.setAdapter(adapter);
-        dragDropButtonRestore();
+        dragandDropRestore();
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 
     }
+    private String itemFromJson(String string){
+        Gson json2 = new Gson();
+        return json2.fromJson(string, (Type) Item.class);
+    }
     private void getDataFromSharedPreference() {
-        int itemCount = preferences.getInt(No_Of_Images,0);
 
-        for (int i = 0; i<=itemCount ; i++){
-        Item item = new Item(preferences.getString(IMAGE+i,"")
-                            ,preferences.getInt(COLOR+i,0)
-                           ,preferences.getString(LABEL+i,""));
-        items.add(item);
-        }
         mode =  preferences.getInt(MODE,0);
         showListItems(items);
-//        if (items==null){
-//            b.list.setVisibility(View.VISIBLE);
-//        }
-//        else {
-//            b.list.setVisibility(View.GONE);
-//        }
+        if (items==null){
+            b.Heading.setVisibility(View.VISIBLE);
+        }
+        else {
+            b.Heading.setVisibility(View.GONE);
+        }
     }
 
     private String jsonFromItem(Item item){
@@ -309,10 +302,7 @@ public class GalleryActivity extends AppCompatActivity {
         return json.toJson(item);
     }
 
-    private String itemFromJson(String string){
-        Gson json2 = new Gson();
-        return json2.fromJson(string, (Type) Item.class);
-    }
+
 
 
     @Override
@@ -371,132 +361,39 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
 
-//    private void enableSwipeToDeleteAndUndo() {
-//        SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(this){
-//            @Override
-//            public void onSwiped(@NonNull @NotNull RecyclerView.ViewHolder viewHolder, int i) {
-//                final int position = viewHolder.getAdapterPosition();
-//                final Item item = adapter.getData().get(position);
-//
-//                adapter.removeItem(item, position);
-//
-//                Snackbar snackbar = Snackbar.make(coordinatorLayout,"Item was removed",Snackbar.LENGTH_LONG);
-//                snackbar.setAction("UNDO", new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        adapter.removeItem(item,position);
-//              //          recyclerView.scrollToPosition(position);
-//
-//
-//                    }
-//                });
-//                snackbar.setActionTextColor(Color.YELLOW);
-//                snackbar.show();
-//            }
-//        };
-//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDeleteCallback);
-//        itemTouchHelper.attachToRecyclerView(recyclerView);
-//    }
 
 
 
-//    private void savedInstancedata(Bundle savedInstanceState) {
-//     //   b.Heading.setVisibility(View.GONE);
-//        String json = savedInstanceState.getString("Items",null);
-//        items = gson.fromJson(json,new TypeToken<List<Item>>(){}.getType());
-//        if (items !=null){
-//            SetUpRecycleView(items);
-//        }
-//        else {
-//            items = new ArrayList<>();
-//        }
-//    }
-//
+private void shareImage(ItemCardBinding binding){
 
-//    // Load Shared Prefrence...
-//    private void loadSharedPreferenceData() {
-//      b.Heading.setVisibility(View.GONE);
-//        SharedPreferences preferences =  getPreferences(MODE_PRIVATE);
-//        String json = preferences.getString("Items",null);
-//        items = gson.fromJson(json,new TypeToken<List<Item>>(){}.getType());
-//        if (items !=null){
-//            SetUpRecycleView(items);
-//        }
-//        else {
-//            items = new ArrayList<>();
-//        }
-//    }
-//        String items = getPreferences(MODE_PRIVATE).getString("ITEMS", null);
-//        if (items!=null) {
-//            SetUpRecycleView();
-//        }
-//        b.Heading.setVisibility(View.GONE);
-//        Log.d("Now", "loadSharedPreferenceData: " + items);
-//        Gson gson = new Gson();
-//        Type type = new TypeToken<List<Item>>() {
-//        }.getType();
-//
-//         // items h isme..
-//       itemList = gson.fromJson(items, type);
-//
-//        //Fetch data from caches
-//        for (Item item : itemList) {
-//            ItemCardBinding binding = ItemCardBinding.inflate(getLayoutInflater());
-//
-//            Glide.with(this)
-//                    .asBitmap()
-//                    .onlyRetrieveFromCache(true)
-//                    .load(item.url)
-//                    .into(binding.imageview);
-//
-//            binding.Title.setBackgroundColor(item.color);
-//            binding.Title.setText(item.label);
-//
-//            Log.d("Now", "onResourceReady: " + item.label);
-//
-//            b.list.addView(binding.getRoot());
-//
-//
-//        }
-//
-//        noOfImages = itemList.size();
-//
-//    }
-
-//
+    Bitmap icon = loadBitmapFromView(binding.getRoot());
 
 
-    private void shareImage(ItemCardBinding binding) throws FileNotFoundException {
-        String bitmapPath =MediaStore.Images.Media.insertImage(getContentResolver(), bitmap,"palatee", "share palatee");
-        Uri bitmapUri = Uri.parse(bitmapPath);
+    // Calling the intent to share the bitmap
+    Intent share = new Intent(Intent.ACTION_SEND);
+    share.setType("image/jpeg");
+ //Create the value obj..
+    ContentValues values = new ContentValues();
+    values.put(MediaStore.Images.Media.TITLE, "title");
+    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+    Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            values);
 
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("image/png");
-        intent.putExtra(Intent.EXTRA_STREAM, bitmapUri );
-        startActivity(Intent.createChooser(intent,"Share"));
+
+    OutputStream outputStream;
+    try {
+        outputStream = getContentResolver().openOutputStream(uri);
+        icon.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+        outputStream.close();
+    } catch (Exception e) {
+        System.err.println(e.toString());
     }
 
+    share.putExtra(Intent.EXTRA_STREAM, uri);
+    startActivity(Intent.createChooser(share, "Share Image"));
+}
 
-
-
-//    public void SortData() {
-//        if (!isSorted) {
-//            isSorted = true;
-//            List<Item> sortedItem = new ArrayList<>(items);
-//            Collections.sort(sortedItem, (p1, p2) -> p1.label.compareTo(p2.label));
-//            if (adapter != null) {
-//                for (int i = 0; i < sortedItem.size(); i++) {
-//                    adapter.labelItem = sortedItem;
-//                    adapter.showSortedItems();
-//                    b.list.setAdapter(adapter);
-//                }
-//            }
-//            }else {
-//            isSorted = false;
-//        }
-//    }
-//
-     //// problem toh isme.............................
+   //// Method to show the Dialog  add image...
     private void showAddgalleryDialog() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -550,19 +447,7 @@ public class GalleryActivity extends AppCompatActivity {
 //        noOfImages++;
 //    }
 
-//public void showItems(List<Item>items){
-//        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-//        adapter = new ImageAdapter(this,items);
-//        b.list.
-//}
 
-//        @Override
-//        public void onSaveInstanceState(@NonNull Bundle outstate){
-//        super.onSaveInstanceState(outstate);
-//        String json = gson.toJson(items);
-//        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-//        outstate.putString("Items",json);
-//        }
     @Override
     protected void onPause() {
         super.onPause();
@@ -583,37 +468,11 @@ public class GalleryActivity extends AppCompatActivity {
 
         preferences.edit()
                 .putInt(MODE,mode);
-//        String json = gson.toJson(items);
-//        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-//        preferences.edit()
-//                .putString("Items", json)
-//                .apply();
+
     }
 
-        //Remove Item and save
-//        if (removeItem != null) {
-//            items.removeAll(removeItem);
-//
-//            Gson gson = new Gson();
-//            String json = gson.toJson(items);
-//
-//            getPreferences(MODE_PRIVATE).edit().putString("ITEMS", json).apply();
-//
-//            finish();
-//        }
-//
-//        //save in SharedPreference
-//        if (isEdited || isAdd) {
-//            Gson gson = new Gson();
-//            String json = gson.toJson(items);
-//            getPreferences(MODE_PRIVATE).edit().putString("ITEMS", json).apply();
-//            isAdd = false;
-//            isEdited = false;
-//        }
-//
-//    }
-//
-//
+
+
 
 }
 

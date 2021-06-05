@@ -9,12 +9,12 @@ public class ImageTouchHelperCallback extends ItemTouchHelper.Callback {
     public ImageTouchHelperCallback(ImageTouchHelperAdapter imageTouchHelperAdapter){
         this.imageTouchHelperAdapter = imageTouchHelperAdapter;
     }
-
+/// ON Long pressed...
     @Override
     public boolean isLongPressDragEnabled() {
         return  false;
     }
-
+// On Swiped..
     @Override
     public boolean isItemViewSwipeEnabled() {
         return true;

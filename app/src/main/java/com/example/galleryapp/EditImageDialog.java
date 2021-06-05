@@ -49,13 +49,13 @@ import java.util.Set;
         private String imageUrl;
 
 
-        /**
-         * Show Edit Image Dialog Box
-         *
-         * @param context
-         * @param imageUrl
-         * @param listener
-         */
+
+          //Show Edit Image Dialog Box
+
+
+
+
+
         public void show(Context context, String imageUrl, EditImageDialog.onCompleteListener listener) {
             this.listener = listener;
             this.imageUrl = imageUrl;
@@ -72,7 +72,7 @@ import java.util.Set;
 
             //Create and Show Dialog
             dialog = new MaterialAlertDialogBuilder(context)
-                    ////yha pe change......................................
+
                     .setView(b.getRoot())
                     .show();
 
@@ -97,6 +97,7 @@ import java.util.Set;
                         }
                     });
         }
+        /// Update the image...
         private void updateNewColorAndLabel() {
             b.edImageView.setImageBitmap(bitmap);
             b.updateBtn.setOnClickListener(new View.OnClickListener() {
@@ -183,9 +184,9 @@ import java.util.Set;
             return colors;
         }
 
-        /**
-         * inflates color chips to main root
-         */
+
+          //inflates color chips to main root
+
         private void inflateColorChips(Set<Integer> colors) {
             //Inflate color chips to edit dialog
             for (int color : colors) {
@@ -197,9 +198,9 @@ import java.util.Set;
         }
 
 
-        /**
-         * Inflates label chips to main root
-         */
+
+       //   Inflates label chips to main root
+
         private void inflateLabelChips(List<String> labels) {
 
 
@@ -213,9 +214,9 @@ import java.util.Set;
         }
 
 
-        /**
-         * Takes Custom Label Input
-         */
+
+         // Takes Custom Label Input
+
         private void handleCustomLabelInput() {
             ChipLabelBinding binding = ChipLabelBinding.inflate(inflater);
             binding.getRoot().setText("Custom");
@@ -230,9 +231,9 @@ import java.util.Set;
             });
         }
 
-        /**
-         * callbacks for edit completion
-         */
+
+          //callbacks for edit completion
+
         public interface onCompleteListener {
             void onEditCompleted(Item item);
 

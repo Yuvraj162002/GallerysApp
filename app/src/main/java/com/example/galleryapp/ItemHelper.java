@@ -131,7 +131,7 @@ public class ItemHelper {
                     @Override
                     public void onSuccess(List<ImageLabel> labels) {
 
-                        //// glti huhee toh yha aana h baad m...................................
+
                         ItemHelper.this.labels = new ArrayList<>();
 
                         //store labels in List<String> labels
