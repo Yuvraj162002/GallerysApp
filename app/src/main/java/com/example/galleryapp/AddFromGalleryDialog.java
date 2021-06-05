@@ -20,12 +20,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
-import com.example.galleryapp.databinding.AddFromGalleryBinding;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.galleryapp.Model.Item;
+import com.example.galleryapp.databinding.AddFromGalleryBinding;
 import com.example.galleryapp.databinding.ChipColorBinding;
 import com.example.galleryapp.databinding.ChipLabelBinding;
-import com.example.galleryapp.model.Item;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.chip.Chip;
@@ -179,7 +179,7 @@ public class AddFromGalleryDialog {
                 int color=((Chip)deviceBinding.dColorChips.findViewById(colorChipId)).getChipBackgroundColor().getDefaultColor();
 
 
-                listener.onAddCompleted(new Item(image,color,label,imageUrl));
+                listener.onAddCompleted(new Item(imageUrl,color,label));
 
                 dialog.dismiss();
             }

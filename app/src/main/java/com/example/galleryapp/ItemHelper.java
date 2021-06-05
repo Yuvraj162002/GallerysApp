@@ -3,7 +3,6 @@ package com.example.galleryapp;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public class ItemHelper {
 
@@ -132,6 +130,8 @@ public class ItemHelper {
                 .addOnSuccessListener(new OnSuccessListener<List<ImageLabel>>() {
                     @Override
                     public void onSuccess(List<ImageLabel> labels) {
+
+                        //// glti huhee toh yha aana h baad m...................................
                         ItemHelper.this.labels = new ArrayList<>();
 
                         //store labels in List<String> labels

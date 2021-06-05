@@ -14,12 +14,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/recycleview"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"/>-->
 
 
     <TextView
@@ -37,6 +31,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+<com.google.android.material.floatingactionbutton.FloatingActionButton
+    android:id="@+id/OnOffDrag"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="end|bottom"
+    android:layout_marginEnd="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginBottom="16dp"
+    android:contentDescription="drag and drop"
+    android:src="@drawable/drag"
+    android:backgroundTint="@color/purple_500"
+    app:fabCustomSize="64dp"
+    app:fabSize="normal"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.900"
+   app:layout_constraintStart_toStartOf="parent"
+
+    app:flow_verticalBias="0.975"
+    app:maxImageSize="30dp"
+    app:rippleColor="@color/purple_700"
+    android:tint="@color/white"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

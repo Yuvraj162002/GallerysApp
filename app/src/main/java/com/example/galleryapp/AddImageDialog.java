@@ -1,14 +1,9 @@
 package com.example.galleryapp;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,23 +11,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
+import com.example.galleryapp.Model.Item;
 import com.example.galleryapp.databinding.ChipColorBinding;
 import com.example.galleryapp.databinding.ChipLabelBinding;
 import com.example.galleryapp.databinding.DialogAddImageBinding;
-import com.example.galleryapp.model.Item;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-
-import java.io.OutputStream;
 import java.util.List;
 import java.util.Set;
 
@@ -51,9 +38,22 @@ public class AddImageDialog implements ItemHelper.OnCompleteListener {
 
     // Show Dialog..
     public void showDialog(Context context, OnCompleteListener listener) {
-        if (!initializeDialog(context, listener))
+        this.context = context;
+        this.listener = listener;
+        if (context instanceof GalleryActivity) {
+            inflater = ((GalleryActivity) context).getLayoutInflater();
+            b = DialogAddImageBinding.inflate(inflater);
+        }
+        else {
+            dialog.dismiss();
+            listener.onError("Cast Exception");
             return;
+        }
 
+        dialog = new MaterialAlertDialogBuilder(context,R.style.CustomDialogTheme)
+                .setView(b.getRoot())
+                .setCancelable(false)
+                .show();
         //Handle dimensions
         handelDimensions();
 
@@ -62,34 +62,93 @@ public class AddImageDialog implements ItemHelper.OnCompleteListener {
 
 
     }
+    /// Step 1... Input Dimension...
+    private void handelDimensions() {
+        //click event on FetchImage button
+        b.FetchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Get text from edit text...
+                String heightstr = b.height.getText().toString().trim(),
+                        widthstr = b.width.getText().toString().trim();
+
+                // Guard Code...
+                if (heightstr.isEmpty() && widthstr.isEmpty()) {
+                    b.height.setError("Please enter at least one dimension");
+                    return;
+                }
+                /// Update UI
+                b.InputDimensionRoot.setVisibility(View.GONE);
+                b.ProgressIndiacatorRoot.setVisibility(View.VISIBLE);
 
 
+                // Square Image..
+                if (widthstr.isEmpty()) {
+                    fetchImage(Integer.parseInt(heightstr));
+                } else if (heightstr.isEmpty()) {
+                    fetchImage(Integer.parseInt(widthstr));
+                } //Rectangular Image..
+                else {
+                    fetchImage(Integer.parseInt(widthstr), Integer.parseInt(heightstr));
+                }
+
+                //hide keyboard
+                hideKeyboard();
+            }
+        });
+
+    }
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+
+        imm.hideSoftInputFromWindow(b.addbutton.getWindowToken(), 0);
+    }
+    /// Step 2...Fetch Random Image..
+    //Rectangular Image..
+    private void fetchImage(int a, int b) {
+
+        new ItemHelper().
+                fetchData(context,a,b, this);
+    }
+
+    //Square Image..
+    private void fetchImage(int x) {
+
+        new ItemHelper().fetchData(context,x,  this);
+    }
+    private void showData(Bitmap bitmap, Set<Integer> colorPalette, List<String> labels) {
+        this.image = bitmap;
+        b.fetchImage.setImageBitmap(bitmap);
+
+        //Inflate colorChip layout
+        inflatePaletteChips(colorPalette);
+
+        //Inflate labelChip layout
+        inflateLabelChips(labels);
+
+        //   handleShareImageEvent();
+
+        //update views
+        b.ProgressIndiacatorRoot.setVisibility(View.GONE);
+        b.MainRoot.setVisibility(View.VISIBLE);
+        b.CustomLabel.setVisibility(View.GONE);
+        b.CancelButton.setVisibility(View.VISIBLE);
+
+        //Handel Custom label
+        handelCustomLabel();
 
 
-    public void editFetchImage(Context context, Item item, OnCompleteListener listener) {
-        this.url = item.url;
-        this.item = item;
-        if (!initializeDialog(context, listener))
-            return;
-
-        b.title.setText("Edit image");
-        b.addbutton.setText("Edit");
-        b.ProgressSubTitle.setText("Please wait...");
-
-
-
-        //Handle cancel event
-        handelCancelButton();
+        //Handel add Button
+        handelAddImageEvent();
     }
 
 
-    // Check Dialog Initialize or not...
 
     private boolean initializeDialog(Context context, OnCompleteListener listener) {
         this.context = context;
         this.listener = listener;
 
-       // Inflate Dialog Layout...
+        // Inflate Dialog Layout...
         if (context instanceof GalleryActivity) {
             //Initialize inflater
             inflater = ((GalleryActivity) context).getLayoutInflater();
@@ -112,158 +171,42 @@ public class AddImageDialog implements ItemHelper.OnCompleteListener {
         return true;
     }
 
-
-
-    ///Handle cancel button..
-
-    private void handelCancelButton() {
-        //click event on Cancel button
-        b.CancelButton.setOnClickListener(new View.OnClickListener() {
+    private void handelAddImageEvent() {
+        b.addbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-    }
+                int colorChipId=b.ColorChips.getCheckedChipId()
+                        ,LabelChipId= b.LabelChips.getCheckedChipId();
 
-   /// Step 1... Input Dimension...
-    private void handelDimensions() {
-        //click event on FetchImage button
-        b.FetchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Get text from edit text...
-                String heightstr = b.height.getText().toString().trim(),
-                        widthstr = b.width.getText().toString().trim();
-
-                // Guard Code...
-                if (heightstr.isEmpty() && widthstr.isEmpty()) {
-                    b.height.setError("Please enter at least one dimension");
+                if(colorChipId== -1 || LabelChipId== -1){
+                    Toast.makeText(context,"Please choose color and label",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                /// Update UI
-                b.InputDimensionRoot.setVisibility(View.GONE);
-                b.ProgressIndiacatorRoot.setVisibility(View.VISIBLE);
 
+                //Get Color and Label:
+                String label;
+                if(isCustomLabel){
+                    label=b.customlabel.getText().toString().trim();
+                    if(label.isEmpty()){
+                        Toast.makeText(context,"Please enter custom label",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-                     // Square Image..
-                if (widthstr.isEmpty()) {
-                    fetchImage(Integer.parseInt(heightstr));
-                } else if (heightstr.isEmpty()) {
-                    fetchImage(Integer.parseInt(widthstr));
-                } //Rectangular Image..
+                }
                 else {
-                    fetchImage(Integer.parseInt(widthstr), Integer.parseInt(heightstr));
+                    label=((Chip)b.LabelChips.findViewById(LabelChipId)).getText().toString();
                 }
 
-                //hide keyboard
-                hideKeyboard();
+                int color=((Chip)b.ColorChips.findViewById(colorChipId)).getChipBackgroundColor().getDefaultColor();
+
+                listener.onImageAdd(new Item(url,color,label));
+
+                dialog.dismiss();
             }
+
         });
 
     }
-
-  //  Hide keyBoard when add button click
-
-    private void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-
-        imm.hideSoftInputFromWindow(b.addbutton.getWindowToken(), 0);
-    }
-
-
-
-          /// Step 2...Fetch Random Image..
-    //Rectangular Image..
-    private void fetchImage(int a, int b) {
-
-        new ItemHelper().
-                fetchData(context,a,b, this);
-    }
-
-   //Square Image..
-    private void fetchImage(int x) {
-
-        new ItemHelper().fetchData(context,x,  this);
-    }
-
-
-
-    //  Call when image all data fetch completely
-
-    @Override
-    public void onFetch(Bitmap bitmap, Set<Integer> colorPalette, List<String> labels, String url) {
-        //call function
-        this.url = url;
-        showData(bitmap, colorPalette, labels);
-    }
-
-    @Override
-    public void onError(String exception) {
-        dialog.dismiss();
-        listener.onError(exception);
-    }
-
-    ///Step 3 : Show Data..
-    private void showData(Bitmap bitmap, Set<Integer> colorPalette, List<String> labels) {
-        this.image = bitmap;
-        b.fetchImage.setImageBitmap(bitmap);
-
-        //Inflate colorChip layout
-        inflatePaletteChips(colorPalette);
-
-        //Inflate labelChip layout
-        inflateLabelChips(labels);
-
-     //   handleShareImageEvent();
-
-        //update views
-        b.ProgressIndiacatorRoot.setVisibility(View.GONE);
-        b.MainRoot.setVisibility(View.VISIBLE);
-        b.CustomLabel.setVisibility(View.GONE);
-        b.CancelButton.setVisibility(View.VISIBLE);
-
-        //Handel Custom label
-        handelCustomLabel();
-
-
-        //Handel add Button
-        handelAddImageEvent();
-    }
-
-
-
-
-
-    private void inflatePaletteChips(Set<Integer> colors) {
-        for (Integer color : colors) {
-            ChipColorBinding binding = ChipColorBinding.inflate(inflater);
-            binding.getRoot().setChipBackgroundColor(ColorStateList.valueOf(color));
-            this.b.ColorChips.addView(binding.getRoot());
-
-
-            //Edit Image
-            //select chip if color present
-            if (item != null && item.color == color) {
-                binding.getRoot().setChecked(true);
-                Log.d("App", "inflatePaletteChips: ");
-            }
-        }
-    }
-
-
-    private void inflateLabelChips(List<String> labels) {
-        for (String label : labels) {
-            ChipLabelBinding binding = ChipLabelBinding.inflate(inflater);
-
-            binding.getRoot().setText(label);
-            this.b.LabelChips.addView(binding.getRoot());
-
-//
-        }
-    }
-
-
     private void handelCustomLabel() {
         ChipLabelBinding binding = ChipLabelBinding.inflate(inflater);
         binding.getRoot().setText("Custom");
@@ -287,44 +230,110 @@ public class AddImageDialog implements ItemHelper.OnCompleteListener {
             }
         });
     }
+    private void inflateLabelChips(List<String> labels) {
+        for (String label : labels) {
+            ChipLabelBinding binding = ChipLabelBinding.inflate(inflater);
 
-   //Hanndle Add Image Event...
-    private void handelAddImageEvent() {
-        //click event on Add Butoon
-        b.addbutton.setOnClickListener(new View.OnClickListener() {
+            binding.getRoot().setText(label);
+            this.b.LabelChips.addView(binding.getRoot());
+
+//
+        }
+    }
+    private void inflatePaletteChips(Set<Integer> colors) {
+        for (Integer color : colors) {
+            ChipColorBinding binding = ChipColorBinding.inflate(inflater);
+            binding.getRoot().setChipBackgroundColor(ColorStateList.valueOf(color));
+            this.b.ColorChips.addView(binding.getRoot());
+
+
+            //Edit Image
+            //select chip if color present
+            if (item != null && item.color == color) {
+                binding.getRoot().setChecked(true);
+                Log.d("App", "inflatePaletteChips: ");
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void editFetchImage(Context context, Item item, OnCompleteListener listener) {
+        this.url = item.image;
+        this.item = item;
+        if (!initializeDialog(context, listener))
+            return;
+
+        b.title.setText("Edit image");
+        b.addbutton.setText("Edit");
+        b.ProgressSubTitle.setText("Please wait...");
+
+
+
+        //Handle cancel event
+        handelCancelButton();
+    }
+
+
+    // Check Dialog Initialize or not...
+
+
+
+    ///Handle cancel button..
+
+    private void handelCancelButton() {
+        //click event on Cancel button
+        b.CancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int chipLabelId = b.LabelChips.getCheckedChipId(),
-                        chipPaletteId = b.ColorChips.getCheckedChipId();
-
-                //Guard Code..
-                if (chipLabelId == -1 || chipPaletteId == -1) {
-                    Toast.makeText(context, "Please select color & label", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                //Get color & label
-                String label;
-                if (isCustomLabel) {
-                    label = b.customlabel.getText().toString().trim();
-                    if (label.isEmpty()) {
-                        Toast.makeText(context, "Please enter custom label", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                } else {
-                    label = ((Chip) b.LabelChips.findViewById(chipLabelId)).getText().toString();
-                }
-
-
-                int color = ((Chip) b.ColorChips.findViewById(chipPaletteId)).getChipBackgroundColor().getDefaultColor();
-
-                //Send callback
-                listener.onImageAdd(new Item(image, color, label, url));
-
                 dialog.dismiss();
             }
         });
     }
+
+
+  //  Hide keyBoard when add button click
+
+
+
+
+
+
+
+    //  Call when image all data fetch completely
+
+    @Override
+    public void onFetch(Bitmap bitmap, Set<Integer> colorPalette, List<String> labels, String url) {
+        //call function
+        this.url = url;
+        showData(bitmap, colorPalette, labels);
+    }
+
+    @Override
+    public void onError(String exception) {
+        dialog.dismiss();
+        listener.onError(exception);
+    }
+
+    ///Step 3 : Show Data..
+
+
+
+
 
 
    /// Interface call when a image is fetch or give some error.

@@ -17,10 +17,10 @@ import androidx.palette.graphics.Palette;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.galleryapp.Model.Item;
 import com.example.galleryapp.databinding.ChipColorBinding;
 import com.example.galleryapp.databinding.ChipLabelBinding;
 import com.example.galleryapp.databinding.DialogEditImageBinding;
-import com.example.galleryapp.model.Item;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.chip.Chip;
@@ -45,7 +45,7 @@ import java.util.Set;
         private boolean isCustomLabel;
         public Bitmap bitmap;
         private AlertDialog dialog;
-        Set<Integer> colors;
+        private Set<Integer> colors;
         private String imageUrl;
 
 
@@ -72,47 +72,31 @@ import java.util.Set;
 
             //Create and Show Dialog
             dialog = new MaterialAlertDialogBuilder(context)
+                    ////yha pe change......................................
                     .setView(b.getRoot())
                     .show();
 
             fetchImage(imageUrl);
             updateNewColorAndLabel();
         }
+        void fetchImage(String url) {
 
-        private void extractLabels() {
-            InputImage inputImage = InputImage.fromBitmap(bitmap, 0);
-            ImageLabeler labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS);
-            labeler.process(inputImage)
-                    .addOnSuccessListener(new OnSuccessListener<List<ImageLabel>>() {
+            Glide.with(context)
+                    .asBitmap()
+                    .load(url)
+                    .into(new CustomTarget<Bitmap>() {
                         @Override
-                        public void onSuccess(@NonNull List<ImageLabel> imageLabels) {
-                            List<String> strings = new ArrayList<>();
-                            for (ImageLabel label : imageLabels) {
-                                strings.add(label.getText());
-                            }
-                            inflateColorChips(colors);
-                            inflateLabelChips(strings);
-                            b.edImageView.setImageBitmap(bitmap);
+                        public void onResourceReady(@NonNull  Bitmap resource, @Nullable  Transition<? super Bitmap> transition) {
+                            bitmap = resource;
+                            extractPaletteFromBitmap();
                         }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
+
                         @Override
-                        public void onFailure(@NonNull Exception e) {
-                            listener.onError(e.toString());
+                        public void onLoadCleared(@Nullable @org.jetbrains.annotations.Nullable Drawable placeholder) {
+
                         }
                     });
         }
-
-        private void extractPaletteFromBitmap() {
-            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                @Override
-                public void onGenerated(Palette palette) {
-                    colors = getColorsFromPalette(palette);
-                    extractLabels();
-                }
-            });
-        }
-
         private void updateNewColorAndLabel() {
             b.edImageView.setImageBitmap(bitmap);
             b.updateBtn.setOnClickListener(new View.OnClickListener() {
@@ -138,12 +122,50 @@ import java.util.Set;
                     int color = ((Chip) b.edColorChips.findViewById(colorChipId)).getChipBackgroundColor().getDefaultColor();
 
                     //Send Callback
-                    Item item = new Item(color,label,imageUrl);
+                    Item item = new Item(imageUrl,color,label);
                     listener.onEditCompleted(item);
                     dialog.dismiss();
                 }
             });
         }
+        private void extractPaletteFromBitmap() {
+            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                @Override
+                public void onGenerated(Palette palette) {
+                    colors = getColorsFromPalette(palette);
+                    extractLabels();
+                }
+            });
+        }
+
+
+
+
+        private void extractLabels() {
+            InputImage inputImage = InputImage.fromBitmap(bitmap, 0);
+            ImageLabeler labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS);
+            labeler.process(inputImage)
+                    .addOnSuccessListener(new OnSuccessListener<List<ImageLabel>>() {
+                        @Override
+                        public void onSuccess(@NonNull List<ImageLabel> imageLabels) {
+                            List<String> strings = new ArrayList<>();
+                            for (ImageLabel label : imageLabels) {
+                                strings.add(label.getText());
+                            }
+                            inflateColorChips(colors);
+                            inflateLabelChips(strings);
+                            b.edImageView.setImageBitmap(bitmap);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            listener.onError(e.toString());
+                        }
+                    });
+        }
+
+
 
         private Set<Integer> getColorsFromPalette(Palette palette) {
             Set<Integer> colors = new HashSet<>();
@@ -190,24 +212,6 @@ import java.util.Set;
             handleCustomLabelInput();
         }
 
-        void fetchImage(String url) {
-
-            Glide.with(context)
-                    .asBitmap()
-                    .load(url)
-                    .into(new CustomTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(@NonNull @org.jetbrains.annotations.NotNull Bitmap resource, @Nullable @org.jetbrains.annotations.Nullable Transition<? super Bitmap> transition) {
-                            bitmap = resource;
-                            extractPaletteFromBitmap();
-                        }
-
-                        @Override
-                        public void onLoadCleared(@Nullable @org.jetbrains.annotations.Nullable Drawable placeholder) {
-
-                        }
-                    });
-        }
 
         /**
          * Takes Custom Label Input
