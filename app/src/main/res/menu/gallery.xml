@@ -6,6 +6,7 @@
         android:id="@+id/Sort_by"
         android:icon="@drawable/ic_baseline_sort_by_alpha_24"
         android:title="Sort"
+
         app:showAsAction="always"/>
     <item android:id="@+id/addImage"
         android:icon="@drawable/ic_download_photo"
