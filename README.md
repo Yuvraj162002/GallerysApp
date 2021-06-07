@@ -24,6 +24,15 @@ which fetch Random Images from url
 
 9).Share Image
 
+10).Drag and Drop Image
+
+11).Swap Image
+
+12).Sort By alphabetically
+
+13) Search Function
+
+
 
 # Preview  Of the Application.
  
@@ -44,13 +53,21 @@ which fetch Random Images from url
 <img width="179" alt="pp5" src="https://user-images.githubusercontent.com/77117240/119303602-a894e500-bc83-11eb-923e-df5177625967.png">
 <img width="180" alt="pareek" src="https://user-images.githubusercontent.com/77117240/119359088-dd765b80-bcc6-11eb-9b9d-4da90b3b9ff5.png">
 
+![Screenshot_20210605_233816](https://user-images.githubusercontent.com/77117240/120902896-85453f00-c660-11eb-82b4-077dc7f521b1.png)
+![Screenshot_20210605_233816_1](https://user-images.githubusercontent.com/77117240/120902912-968e4b80-c660-11eb-9dbd-96ea142ce00a.png)
+![Screenshot_20210605_233816_2](https://user-images.githubusercontent.com/77117240/120902916-9e4df000-c660-11eb-9aaa-d4942e916c9e.png)
+![Screenshot_20210605_233816_3](https://user-images.githubusercontent.com/77117240/120902921-a6a62b00-c660-11eb-8ee5-8ca5234ecc0f.png)
+![Screenshot_20210605_233816_4](https://user-images.githubusercontent.com/77117240/120902928-b0c82980-c660-11eb-8ba2-8fc81dc9fa2f.png)
+![aree 1](https://user-images.githubusercontent.com/77117240/120902971-f08f1100-c660-11eb-80b3-2f0f46b12605.jpg)
+![aree 3](https://user-images.githubusercontent.com/77117240/120902999-0c92b280-c661-11eb-9db5-73855e314eab.jpg)
+
 
 # Apk
-
 https://github.com/Yuvraj162002/GallerysApp/blob/master/app-debug.apk
+
 # Video 
  Here is the small video of the Application to show how it is work..
+ https://github.com/Yuvraj162002/GallerysApp/blob/master/galleryapp%20video.mp4
  
- https://github.com/Yuvraj162002/GallerysApp/blob/master/Gallery%20app%20(2).mp4
 
 
