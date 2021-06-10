@@ -1,6 +1,7 @@
 package com.example.galleryapp;
 
 import android.content.Context;
+import android.text.Layout;
 import android.view.ContextMenu;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -28,6 +29,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     public String imageUrl;
     public int index;
     public ItemCardBinding itemCardBinding;
+   // ItemCardBinding binding =  ItemCardBinding.inflate((getLayoutInflater()));
+
+
     public int mode;
     public List<ImageViewHolder> holderList = new ArrayList<>();
     public static final String MODE = "mode";
@@ -80,12 +84,20 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
             notifyDataSetChanged();
             return;
         }
+        else if (items.contains(query))
         query = query.toLowerCase();
 
         List<Item> filterdata = new ArrayList<>();
+
         for (Item item : items) {
             if (item.label.toLowerCase().contains(query)) {
                 filterdata.add(item);
+            }
+            else{
+               // GalleryActivity b = GalleryActivity.
+                ItemCardBinding b = ItemCardBinding.inflate(LayoutInflater.from(context));
+                b.title.setVisibility(View.VISIBLE);
+
             }
         }
         VisiblelabelItem = filterdata;
@@ -150,6 +162,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
             }
         }
 
+//        @Override
+//        public void onCreateContextMenu(ContextMenu menu,View v,ContextMenu.ContextMenuInfo menuInfo){
+//
+//        }
+
         @Override
         public boolean onDown(MotionEvent e) {
             return false;
@@ -196,7 +213,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             gestureDetector.onTouchEvent(event);
-            return false;
+            return true;
         }
     }
 

@@ -60,6 +60,7 @@ public class GalleryActivity extends AppCompatActivity {
     ItemTouchHelper.Callback callback2;
     ItemTouchHelper itemTouchHelper1;
     Bitmap bitmap;
+    private static final int REQUEST_READ_EXTERNAL_STORAGE = 32;
 
 
     @Override
@@ -122,7 +123,7 @@ public class GalleryActivity extends AppCompatActivity {
                 adapter.mode = 1;
                 List<ImageAdapter.ImageViewHolder> holders = adapter.holderList;
                 b.OnOffDrag.setBackgroundTintList(getResources().getColorStateList(R.color.purple_200));
-                b.OnOffDrag.setRippleColor(getResources().getColorStateList(R.color.purple_200));
+                b.OnOffDrag.setRippleColor(getResources().getColorStateList(R.color.purple_500));
 
                 b.OnOffDrag.setImageResource(R.drawable.drag);
                 for (int i = 0; i < holders.size(); i++) {
@@ -136,7 +137,7 @@ public class GalleryActivity extends AppCompatActivity {
                 for (int i = 0; i < holders.size(); i++) {
                     holders.get(i).eventListenerHandler();
                 }
-                b.OnOffDrag.setBackgroundTintList(getResources().getColorStateList(R.color.purple_200));
+                b.OnOffDrag.setBackgroundTintList(getResources().getColorStateList(R.color.purple_500));
                 b.OnOffDrag.setRippleColor(getResources().getColorStateList(R.color.purple_200));
                 b.OnOffDrag.setImageResource(R.drawable.notdrag);
                 itemTouchHelper1.attachToRecyclerView(null);
@@ -172,16 +173,47 @@ public class GalleryActivity extends AppCompatActivity {
                     });
         }
 
-        if (item.getItemId() == R.id.shareImage) {
+        if (item.getItemId() == R.id.shareImage)
 
             shareImage(binding);
+           // sharePermission();
 
             return true;
         }
-        return super.onContextItemSelected(item);
-    }
 
-/// Method for search....
+//        return super.onContextItemSelected(item);
+
+
+//    private void sharePermission() {
+//        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+//            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_DENIED){
+//                String[]getPermission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+//                requestPermissions(getPermission,RESULT);
+//            }
+//            else {
+//                shareImage();
+//            }
+//        }
+//        else {
+//            shareImage(binding);
+//        }
+//    }
+//private boolean checkPermission() {
+//    if (ActivityCompat.checkSelfPermission(this,
+//            Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this,
+//            Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+//        ActivityCompat.requestPermissions(this,
+//                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, REQUEST_READ_EXTERNAL_STORAGE);
+//
+//        return false;
+//
+//    }
+//
+//    return true;
+//}
+
+
+    /// Method for search....
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.gallery,menu);
@@ -345,6 +377,34 @@ public class GalleryActivity extends AppCompatActivity {
 
         }
     }
+    private void shareImage(ItemCardBinding binding){
+
+        Bitmap bitmap = loadBitmapFromView(binding.getRoot());
+
+
+        // Calling the intent to share the bitmap
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setType("image/png");
+        //Create the value obj..
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "title");
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                values);
+
+
+        OutputStream outputStream;
+        try {
+            outputStream = getContentResolver().openOutputStream(uri);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            outputStream.close();
+        } catch (Exception e) {
+            System.err.println(e.toString());
+        }
+
+        share.putExtra(Intent.EXTRA_STREAM, uri);
+        startActivity(Intent.createChooser(share, "Share Image"));
+    }
 
     public Bitmap loadBitmapFromView(View view){
             Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(),view.getHeight(),Bitmap.Config.ARGB_8888);
@@ -364,34 +424,6 @@ public class GalleryActivity extends AppCompatActivity {
 
 
 
-private void shareImage(ItemCardBinding binding){
-
-    Bitmap icon = loadBitmapFromView(binding.getRoot());
-
-
-    // Calling the intent to share the bitmap
-    Intent share = new Intent(Intent.ACTION_SEND);
-    share.setType("image/jpeg");
- //Create the value obj..
-    ContentValues values = new ContentValues();
-    values.put(MediaStore.Images.Media.TITLE, "title");
-    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-    Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            values);
-
-
-    OutputStream outputStream;
-    try {
-        outputStream = getContentResolver().openOutputStream(uri);
-        icon.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-        outputStream.close();
-    } catch (Exception e) {
-        System.err.println(e.toString());
-    }
-
-    share.putExtra(Intent.EXTRA_STREAM, uri);
-    startActivity(Intent.createChooser(share, "Share Image"));
-}
 
    //// Method to show the Dialog  add image...
     private void showAddgalleryDialog() {
