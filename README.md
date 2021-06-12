@@ -60,11 +60,12 @@ which fetch Random Images from url
 ![Screenshot_20210605_233816_4](https://user-images.githubusercontent.com/77117240/120902928-b0c82980-c660-11eb-8ba2-8fc81dc9fa2f.png)
 ![aree 1](https://user-images.githubusercontent.com/77117240/120902971-f08f1100-c660-11eb-80b3-2f0f46b12605.jpg)
 ![aree 3](https://user-images.githubusercontent.com/77117240/120902999-0c92b280-c661-11eb-9db5-73855e314eab.jpg)
+![Screenshot_20210612_222244](https://user-images.githubusercontent.com/77117240/121783590-20906400-cbcd-11eb-90c6-2fe2bba68e42.png)
+
 
 
 # Apk
 https://github.com/Yuvraj162002/GallerysApp/blob/master/app-debug.apk
-
 # Video 
  Here is the small video of the Application to show how it is work..
  https://github.com/Yuvraj162002/GallerysApp/blob/master/galleryapp%20video.mp4
