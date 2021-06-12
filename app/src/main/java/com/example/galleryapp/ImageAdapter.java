@@ -1,7 +1,6 @@
 package com.example.galleryapp;
 
 import android.content.Context;
-import android.text.Layout;
 import android.view.ContextMenu;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -81,6 +80,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     public void filter(String query) {
         if (query.trim().isEmpty()) {
             VisiblelabelItem = items;
+            ((GalleryActivity)context).findViewById(R.id.title).setVisibility(View.GONE);
             notifyDataSetChanged();
             return;
         }
@@ -94,9 +94,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                 filterdata.add(item);
             }
             else{
-               // GalleryActivity b = GalleryActivity.
-                ItemCardBinding b = ItemCardBinding.inflate(LayoutInflater.from(context));
-                b.title.setVisibility(View.VISIBLE);
+
+                ((GalleryActivity)context).findViewById(R.id.title).setVisibility(View.VISIBLE);
+                ((GalleryActivity)context).findViewById(R.id.Heading).setVisibility(View.GONE);
 
             }
         }

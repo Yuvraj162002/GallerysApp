@@ -176,41 +176,12 @@ public class GalleryActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.shareImage)
 
             shareImage(binding);
-           // sharePermission();
 
             return true;
         }
 
-//        return super.onContextItemSelected(item);
+      //  return super.onContextItemSelected(item);
 
-
-//    private void sharePermission() {
-//        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
-//            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_DENIED){
-//                String[]getPermission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-//                requestPermissions(getPermission,RESULT);
-//            }
-//            else {
-//                shareImage();
-//            }
-//        }
-//        else {
-//            shareImage(binding);
-//        }
-//    }
-//private boolean checkPermission() {
-//    if (ActivityCompat.checkSelfPermission(this,
-//            Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this,
-//            Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-//        ActivityCompat.requestPermissions(this,
-//                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, REQUEST_READ_EXTERNAL_STORAGE);
-//
-//        return false;
-//
-//    }
-//
-//    return true;
-//}
 
 
     /// Method for search....
